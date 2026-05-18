@@ -1,13 +1,13 @@
 """
 المنصة الذكية لتحليل البيانات - النسخة الكاملة المحسّنة
 Smart Data Analysis Platform - Full Enhanced Version
- 
+
 ✨ الميزات الجديدة:
 - فلترة متقدمة قبل الرسم
 - شاشة ترحيب بتأثيرات حركية
 - تنبيهات لحجم الملف
 """
- 
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -16,24 +16,24 @@ import json
 import io
 from datetime import datetime
 from pathlib import Path
- 
+
 # ============================================================================
 # الإعدادات الأساسية
 # ============================================================================
- 
+
 st.set_page_config(
     page_title="المنصة الذكية لتحليل البيانات",
     page_icon="🌐",
     layout="wide",
     initial_sidebar_state="expanded"
 )
- 
+
 # ============================================================================
 # عدّاد الزوار
 # ============================================================================
- 
+
 VISITOR_FILE = Path("visitors.json")
- 
+
 def get_visitor_count():
     try:
         if VISITOR_FILE.exists():
@@ -43,7 +43,7 @@ def get_visitor_count():
         return 0, 0, ''
     except Exception:
         return 0, 0, ''
- 
+
 def increment_visitor():
     if 'counted' not in st.session_state:
         st.session_state.counted = True
@@ -62,11 +62,11 @@ def increment_visitor():
             return 0, 0
     total, today, _ = get_visitor_count()
     return total, today
- 
+
 # ============================================================================
 # تنسيقات CSS - وضع داكن + تأثيرات حركية
 # ============================================================================
- 
+
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Cairo:wght@400;600;700&display=swap');
@@ -141,12 +141,17 @@ st.markdown("""
         padding: 25px 20px;
         border-radius: 16px;
         text-align: center;
-        height: 200px;
+        min-height: 240px;
+        height: auto;
         border: 1px solid rgba(102, 126, 234, 0.2);
         transition: all 0.4s ease;
         animation: fadeInUp 0.8s ease-out;
         position: relative;
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
     
     .feature-card::before {
@@ -350,11 +355,11 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
- 
+
 # ============================================================================
 # الشريط الجانبي
 # ============================================================================
- 
+
 with st.sidebar:
     st.markdown("### 📊 إحصائيات الموقع")
     total, today = increment_visitor()
@@ -368,37 +373,37 @@ with st.sidebar:
     st.markdown("### ℹ️ عن المنصة")
     st.caption("""
 منصة مجانية بالكامل لتحليل البيانات:
- 
+
 📁 **الصيغ**: CSV, Excel, JSON, Parquet, TSV
- 
+
 📊 **التحليلات**: 
 - إحصاءات وصفية
 - رؤى تلقائية
 - كشف القيم الشاذة
 - تحليل الارتباطات
 - فلترة متقدمة
- 
+
 📈 **الرسوم**: 7 أنواع تفاعلية
- 
+
 📤 **التصدير**: Excel, CSV, JSON
     """)
     st.divider()
     st.caption("⭐ التطبيق مجاني 100%")
- 
+
 # ============================================================================
 # العنوان
 # ============================================================================
- 
+
 st.title("🌐 المنصة الذكية لتحليل البيانات")
 st.markdown(
     "<p style='font-size:1.1rem; color:#a0aec0;'>ارفع ملف بياناتك والنظام يحلله تلقائياً ويولّد لك تقارير ذكية ورسوم تفاعلية</p>",
     unsafe_allow_html=True
 )
- 
+
 # ============================================================================
 # قراءة الملفات
 # ============================================================================
- 
+
 def load_data(uploaded_file):
     file_name = uploaded_file.name.lower()
     try:
@@ -416,7 +421,11 @@ def load_data(uploaded_file):
         elif file_name.endswith('.json'):
             return pd.read_json(uploaded_file)
         elif file_name.endswith('.parquet'):
-            return pd.read_parquet(uploaded_file)
+            try:
+                return pd.read_parquet(uploaded_file)
+            except ImportError:
+                st.error("⚠️ صيغة Parquet غير مدعومة في النسخة الحالية. استخدم CSV أو Excel أو JSON.")
+                return None
         elif file_name.endswith('.tsv'):
             return pd.read_csv(uploaded_file, sep='\t')
         else:
@@ -425,11 +434,11 @@ def load_data(uploaded_file):
     except Exception as e:
         st.error(f"خطأ في قراءة الملف: {str(e)}")
         return None
- 
+
 # ============================================================================
 # توليد الرؤى التلقائية
 # ============================================================================
- 
+
 def generate_insights(df):
     insights = []
     insights.append(f"📊 البيانات تحتوي على <b>{df.shape[0]:,} صف</b> و <b>{df.shape[1]} عمود</b>")
@@ -502,11 +511,11 @@ def generate_insights(df):
                 insights.append(f"📌 في <b>{col}</b>: القيمة <b>{top_val}</b> هي الأكثر تكراراً ({top_pct:.1f}%)")
     
     return insights
- 
+
 # ============================================================================
 # 🆕 نظام الفلترة المتقدمة
 # ============================================================================
- 
+
 def apply_filters(df):
     """يطبق فلاتر متعددة على البيانات حسب اختيارات المستخدم"""
     filtered_df = df.copy()
@@ -612,18 +621,18 @@ def apply_filters(df):
         st.markdown("</div>", unsafe_allow_html=True)
     
     return filtered_df
- 
+
 # ============================================================================
 # رفع الملف
 # ============================================================================
- 
+
 st.markdown("### 📁 رفع البيانات")
 uploaded_file = st.file_uploader(
     "اختر ملف البيانات",
-    type=['csv', 'xlsx', 'xls', 'json', 'parquet', 'tsv'],
-    help="الصيغ المدعومة: CSV, Excel, JSON, Parquet, TSV"
+    type=['csv', 'xlsx', 'xls', 'json', 'tsv'],
+    help="الصيغ المدعومة: CSV, Excel, JSON, TSV"
 )
- 
+
 if uploaded_file:
     # 🆕 تنبيهات حجم الملف
     file_size_mb = uploaded_file.size / (1024 * 1024)
@@ -863,7 +872,7 @@ if uploaded_file:
                 mime="application/json",
                 use_container_width=True
             )
- 
+
 else:
     # ====================================================================
     # 🆕 شاشة الترحيب الحركية
@@ -888,7 +897,7 @@ else:
         <div class='feature-card'>
             <div class='feature-icon'>📊</div>
             <h4 style='color: #e8e8e8; margin: 10px 0;'>تحليل شامل</h4>
-            <p style='color: #a0aec0; font-size: 0.9rem;'>إحصاءات وصفية ورؤى تلقائية</p>
+            <p style='color: #a0aec0; font-size: 0.9rem; line-height: 1.6; margin: 0;'>إحصاءات وصفية ورؤى تلقائية</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -897,7 +906,7 @@ else:
         <div class='feature-card'>
             <div class='feature-icon'>📈</div>
             <h4 style='color: #e8e8e8; margin: 10px 0;'>رسوم تفاعلية</h4>
-            <p style='color: #a0aec0; font-size: 0.9rem;'>7 أنواع رسوم بيانية احترافية</p>
+            <p style='color: #a0aec0; font-size: 0.9rem; line-height: 1.6; margin: 0;'>7 أنواع رسوم بيانية احترافية</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -906,7 +915,7 @@ else:
         <div class='feature-card'>
             <div class='feature-icon'>🔍</div>
             <h4 style='color: #e8e8e8; margin: 10px 0;'>فلترة متقدمة</h4>
-            <p style='color: #a0aec0; font-size: 0.9rem;'>تخصيص البيانات قبل التحليل</p>
+            <p style='color: #a0aec0; font-size: 0.9rem; line-height: 1.6; margin: 0;'>تخصيص البيانات قبل التحليل</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -915,7 +924,7 @@ else:
         <div class='feature-card'>
             <div class='feature-icon'>📤</div>
             <h4 style='color: #e8e8e8; margin: 10px 0;'>تصدير متعدد</h4>
-            <p style='color: #a0aec0; font-size: 0.9rem;'>Excel, CSV, JSON بنقرة واحدة</p>
+            <p style='color: #a0aec0; font-size: 0.9rem; line-height: 1.6; margin: 0;'>Excel, CSV, JSON بنقرة واحدة</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -924,10 +933,10 @@ else:
     <div class='upload-hint'>
         <div style='font-size: 2rem; margin-bottom: 10px;'>👆</div>
         <h4 style='color: #e8e8e8;'>اضغط على "Browse files" بالأعلى للبدء</h4>
-        <p style='color: #a0aec0;'>الصيغ المدعومة: CSV, Excel, JSON, Parquet, TSV</p>
+        <p style='color: #a0aec0;'>الصيغ المدعومة: CSV, Excel, JSON, TSV</p>
     </div>
     """, unsafe_allow_html=True)
- 
+
 # عدّاد الزوار العائم
 total_v, today_v, _ = get_visitor_count()
 st.markdown(f"""
@@ -935,4 +944,3 @@ st.markdown(f"""
     👥 {total_v:,} زائر  •  📅 اليوم: {today_v:,}
 </div>
 """, unsafe_allow_html=True)
- 
