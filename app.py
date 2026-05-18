@@ -467,104 +467,6 @@ st.markdown("""
     .stApp > div[data-testid="stSidebar"][aria-expanded="false"] + section > div {
         max-width: 100% !important;
     }
-    
-    /* ===== تنسيق الطباعة / PDF ===== */
-    @media print {
-        /* خلفية بيضاء للطباعة */
-        .stApp {
-            background: white !important;
-        }
-        
-        body, .stApp, .main {
-            background: white !important;
-            color: black !important;
-        }
-        
-        /* جعل النصوص سوداء للقراءة */
-        .stMarkdown, .stText, p, h1, h2, h3, h4, h5, h6, span, div {
-            color: black !important;
-            -webkit-text-fill-color: black !important;
-        }
-        
-        /* عناوين بلون مميز */
-        h1, h2, h3 {
-            color: #2d3748 !important;
-            -webkit-text-fill-color: #2d3748 !important;
-        }
-        
-        /* بطاقات بحدود بدل خلفية ملونة */
-        .insight-card, [data-testid="stMetric"] {
-            background: white !important;
-            border: 1px solid #cbd5e0 !important;
-            color: black !important;
-            box-shadow: none !important;
-        }
-        
-        .insight-card *, [data-testid="stMetric"] * {
-            color: black !important;
-            -webkit-text-fill-color: black !important;
-        }
-        
-        /* قيمة المقياس */
-        [data-testid="stMetricValue"] {
-            color: #667eea !important;
-            -webkit-text-fill-color: #667eea !important;
-            font-weight: bold !important;
-        }
-        
-        /* إخفاء الأشياء غير المفيدة في الـ PDF */
-        button,
-        .stButton,
-        .stDownloadButton,
-        .stFileUploader,
-        [data-testid="stSidebar"],
-        [data-testid="stToolbar"],
-        [data-testid="stHeader"],
-        [data-testid="stDecoration"],
-        [data-testid="stStatusWidget"],
-        .visitor-badge,
-        .upload-hint,
-        .welcome-hero,
-        iframe,
-        .stTabs [data-baseweb="tab-list"] {
-            display: none !important;
-        }
-        
-        /* الجداول بحدود واضحة */
-        .stDataFrame, table {
-            background: white !important;
-            border: 1px solid #ddd !important;
-        }
-        
-        .stDataFrame th, .stDataFrame td, table th, table td {
-            color: black !important;
-            background: white !important;
-            border: 1px solid #ddd !important;
-        }
-        
-        /* الرسوم البيانية */
-        .js-plotly-plot {
-            background: white !important;
-        }
-        
-        /* الفواصل */
-        hr {
-            background: #cbd5e0 !important;
-            border-color: #cbd5e0 !important;
-            margin: 10px 0 !important;
-        }
-        
-        /* إزالة المسافات الزائدة */
-        .stApp > .main > .block-container {
-            padding: 10px !important;
-            max-width: 100% !important;
-        }
-        
-        /* تصغير المسافات بين العناصر */
-        .element-container {
-            margin-bottom: 10px !important;
-        }
-    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -1058,33 +960,145 @@ if uploaded_file:
             )
         
         with exp_col4:
-            # زر الطباعة / حفظ PDF - يستخدم components.html للسماح بـ JavaScript
-            import streamlit.components.v1 as components
-            components.html("""
-            <div style="width: 100%;">
-                <button onclick="window.parent.print()" style="
-                    width: 100%;
-                    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-                    color: white;
-                    border: none;
-                    border-radius: 10px;
-                    padding: 0.6rem 1rem;
-                    font-weight: 600;
-                    cursor: pointer;
-                    font-family: 'Tajawal', sans-serif;
-                    font-size: 0.95rem;
-                    box-shadow: 0 4px 12px rgba(240, 147, 251, 0.3);
-                    transition: all 0.3s ease;
-                    height: 42px;
-                "
-                onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 20px rgba(240, 147, 251, 0.5)';"
-                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(240, 147, 251, 0.3)';"
-                >
-                    🖨️ طباعة / PDF
-                </button>
-            </div>
-            """, height=55)
-            st.caption("💡 اختر 'حفظ كـ PDF' لتصدير PDF")
+            # توليد تقرير HTML نظيف للتصدير كـ PDF
+            html_report = f"""<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>تقرير تحليل البيانات</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+    * {{ font-family: 'Tajawal', Arial, sans-serif; box-sizing: border-box; }}
+    body {{ 
+        background: white; 
+        color: #1a1a2e; 
+        padding: 40px; 
+        max-width: 1000px; 
+        margin: 0 auto;
+        line-height: 1.6;
+    }}
+    h1 {{ 
+        color: #667eea; 
+        text-align: center; 
+        font-size: 28px;
+        border-bottom: 3px solid #667eea;
+        padding-bottom: 15px;
+        margin-bottom: 30px;
+    }}
+    h2 {{ 
+        color: #2d3748; 
+        margin-top: 35px;
+        padding-right: 15px;
+        border-right: 4px solid #667eea;
+        font-size: 20px;
+    }}
+    .header-info {{
+        text-align: center;
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 14px;
+    }}
+    .metric-grid {{
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin: 20px 0;
+    }}
+    .metric {{
+        background: #f8f9fa;
+        padding: 18px;
+        border-radius: 10px;
+        border-right: 4px solid #667eea;
+        text-align: center;
+    }}
+    .metric-label {{ color: #666; font-size: 13px; margin-bottom: 5px; }}
+    .metric-value {{ color: #667eea; font-size: 22px; font-weight: bold; }}
+    .insight {{
+        background: #f8f9fa;
+        padding: 12px 18px;
+        border-radius: 8px;
+        border-right: 3px solid #667eea;
+        margin: 8px 0;
+    }}
+    table {{
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+        font-size: 13px;
+    }}
+    th {{
+        background: #667eea;
+        color: white;
+        padding: 10px;
+        text-align: right;
+    }}
+    td {{
+        padding: 8px 10px;
+        border-bottom: 1px solid #eee;
+        text-align: right;
+    }}
+    tr:nth-child(even) {{ background: #f8f9fa; }}
+    .footer {{
+        text-align: center;
+        margin-top: 50px;
+        padding-top: 20px;
+        border-top: 1px solid #ddd;
+        color: #999;
+        font-size: 12px;
+    }}
+    @media print {{
+        body {{ padding: 20px; }}
+        h1 {{ page-break-after: avoid; }}
+        h2 {{ page-break-after: avoid; }}
+        table {{ page-break-inside: auto; }}
+        tr {{ page-break-inside: avoid; }}
+    }}
+</style>
+</head>
+<body>
+<h1>🌐 تقرير تحليل البيانات</h1>
+<div class="header-info">
+    <p>تم إنشاؤه في: {datetime.now().strftime('%Y-%m-%d %H:%M')}</p>
+    <p>عدد الصفوف: {df.shape[0]:,} | عدد الأعمدة: {df.shape[1]}</p>
+</div>
+
+<h2>📋 المقاييس الرئيسية</h2>
+<div class="metric-grid">
+    <div class="metric"><div class="metric-label">عدد الصفوف</div><div class="metric-value">{df.shape[0]:,}</div></div>
+    <div class="metric"><div class="metric-label">عدد الأعمدة</div><div class="metric-value">{df.shape[1]}</div></div>
+    <div class="metric"><div class="metric-label">القيم المفقودة</div><div class="metric-value">{df.isnull().sum().sum():,}</div></div>
+    <div class="metric"><div class="metric-label">الحجم (KB)</div><div class="metric-value">{df.memory_usage(deep=True).sum() / 1024:.1f}</div></div>
+</div>
+
+<h2>🧠 الرؤى التلقائية</h2>
+{''.join(f'<div class="insight">{insight}</div>' for insight in insights)}
+
+<h2>📐 معلومات الأعمدة</h2>
+<table>
+<tr><th>العمود</th><th>النوع</th><th>القيم الفريدة</th><th>القيم المفقودة</th></tr>
+{''.join(f'<tr><td>{col}</td><td>{df[col].dtype}</td><td>{df[col].nunique()}</td><td>{df[col].isnull().sum()}</td></tr>' for col in df.columns)}
+</table>
+
+{f'<h2>📈 الإحصاءات الوصفية</h2>{df[num_cols].describe().to_html(classes="stats-table", border=0)}' if num_cols else ''}
+
+<h2>👁️ عينة من البيانات (أول 20 صف)</h2>
+{df.head(20).to_html(border=0, index=False)}
+
+<div class="footer">
+    <p>تم إنشاؤه بواسطة المنصة الذكية لتحليل البيانات</p>
+</div>
+</body>
+</html>"""
+            
+            st.download_button(
+                "🖨️ تقرير PDF",
+                data=html_report.encode('utf-8'),
+                file_name=f"report_{datetime.now().strftime('%Y%m%d_%H%M')}.html",
+                mime="text/html",
+                use_container_width=True,
+                help="حمّل الملف ثم افتحه في المتصفح واطبعه أو احفظه كـ PDF"
+            )
+            st.caption("💡 افتح الملف بالمتصفح ثم Cmd+P → حفظ كـ PDF")
 
 else:
     # ====================================================================
