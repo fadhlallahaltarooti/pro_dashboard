@@ -467,6 +467,101 @@ st.markdown("""
     .stApp > div[data-testid="stSidebar"][aria-expanded="false"] + section > div {
         max-width: 100% !important;
     }
+    
+    /* ===== تنسيق الطباعة / PDF ===== */
+    @media print {
+        /* خلفية بيضاء للطباعة */
+        .stApp {
+            background: white !important;
+        }
+        
+        body, .stApp, .main {
+            background: white !important;
+            color: black !important;
+        }
+        
+        /* جعل النصوص سوداء للقراءة */
+        .stMarkdown, .stText, p, h1, h2, h3, h4, h5, h6, span, div {
+            color: black !important;
+            -webkit-text-fill-color: black !important;
+        }
+        
+        /* عناوين بلون مميز */
+        h1, h2, h3 {
+            color: #2d3748 !important;
+            -webkit-text-fill-color: #2d3748 !important;
+            page-break-after: avoid;
+        }
+        
+        /* بطاقات بحدود بدل خلفية ملونة */
+        .insight-card, [data-testid="stMetric"], .feature-card {
+            background: white !important;
+            border: 1px solid #cbd5e0 !important;
+            color: black !important;
+            box-shadow: none !important;
+            page-break-inside: avoid;
+        }
+        
+        .insight-card *, [data-testid="stMetric"] * {
+            color: black !important;
+            -webkit-text-fill-color: black !important;
+        }
+        
+        /* قيمة المقياس باللون البنفسجي */
+        [data-testid="stMetricValue"] {
+            color: #667eea !important;
+            -webkit-text-fill-color: #667eea !important;
+            font-weight: bold !important;
+        }
+        
+        /* إخفاء الأشياء غير المفيدة في الـ PDF */
+        button,
+        .stButton,
+        .stDownloadButton,
+        .stFileUploader,
+        [data-testid="stSidebar"],
+        [data-testid="stToolbar"],
+        [data-testid="stHeader"],
+        [data-testid="stDecoration"],
+        [data-testid="stStatusWidget"],
+        .visitor-badge,
+        .upload-hint,
+        .welcome-hero,
+        iframe,
+        .stTabs [data-baseweb="tab-list"] {
+            display: none !important;
+        }
+        
+        /* الجداول بحدود واضحة */
+        .stDataFrame, table {
+            background: white !important;
+            border: 1px solid #ddd !important;
+            page-break-inside: avoid;
+        }
+        
+        .stDataFrame th, .stDataFrame td, table th, table td {
+            color: black !important;
+            background: white !important;
+            border: 1px solid #ddd !important;
+        }
+        
+        /* الرسوم البيانية - حافظ عليها */
+        .js-plotly-plot {
+            page-break-inside: avoid;
+            background: white !important;
+        }
+        
+        /* الفواصل */
+        hr {
+            background: #cbd5e0 !important;
+            border-color: #cbd5e0 !important;
+        }
+        
+        /* تحسين تباعد الصفحات */
+        .stDivider {
+            page-break-before: always;
+        }
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -918,7 +1013,7 @@ if uploaded_file:
         st.markdown("## 📤 تصدير التقارير")
         st.caption("💡 سيتم تصدير البيانات بعد تطبيق الفلاتر")
         
-        exp_col1, exp_col2, exp_col3 = st.columns(3)
+        exp_col1, exp_col2, exp_col3, exp_col4 = st.columns(4)
         
         with exp_col1:
             try:
@@ -958,6 +1053,31 @@ if uploaded_file:
                 mime="application/json",
                 use_container_width=True
             )
+        
+        with exp_col4:
+            # زر الطباعة / حفظ PDF
+            st.markdown("""
+            <button onclick="window.print()" style="
+                width: 100%;
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                color: white;
+                border: none;
+                border-radius: 10px;
+                padding: 0.6rem 1.5rem;
+                font-weight: 600;
+                cursor: pointer;
+                font-family: 'Tajawal', sans-serif;
+                font-size: 1rem;
+                box-shadow: 0 4px 12px rgba(240, 147, 251, 0.3);
+                transition: all 0.3s ease;
+            " 
+            onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 20px rgba(240, 147, 251, 0.5)';"
+            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(240, 147, 251, 0.3)';"
+            >
+                🖨️ طباعة / PDF
+            </button>
+            """, unsafe_allow_html=True)
+            st.caption("💡 يفتح طباعة المتصفح - اختر 'حفظ كـ PDF' لتصدير PDF")
 
 else:
     # ====================================================================
