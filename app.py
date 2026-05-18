@@ -1055,29 +1055,33 @@ if uploaded_file:
             )
         
         with exp_col4:
-            # زر الطباعة / حفظ PDF
-            st.markdown("""
-            <button onclick="window.print()" style="
-                width: 100%;
-                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-                color: white;
-                border: none;
-                border-radius: 10px;
-                padding: 0.6rem 1.5rem;
-                font-weight: 600;
-                cursor: pointer;
-                font-family: 'Tajawal', sans-serif;
-                font-size: 1rem;
-                box-shadow: 0 4px 12px rgba(240, 147, 251, 0.3);
-                transition: all 0.3s ease;
-            " 
-            onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 20px rgba(240, 147, 251, 0.5)';"
-            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(240, 147, 251, 0.3)';"
-            >
-                🖨️ طباعة / PDF
-            </button>
-            """, unsafe_allow_html=True)
-            st.caption("💡 يفتح طباعة المتصفح - اختر 'حفظ كـ PDF' لتصدير PDF")
+            # زر الطباعة / حفظ PDF - يستخدم components.html للسماح بـ JavaScript
+            import streamlit.components.v1 as components
+            components.html("""
+            <div style="width: 100%;">
+                <button onclick="window.parent.print()" style="
+                    width: 100%;
+                    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                    color: white;
+                    border: none;
+                    border-radius: 10px;
+                    padding: 0.6rem 1rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    font-family: 'Tajawal', sans-serif;
+                    font-size: 0.95rem;
+                    box-shadow: 0 4px 12px rgba(240, 147, 251, 0.3);
+                    transition: all 0.3s ease;
+                    height: 42px;
+                "
+                onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 20px rgba(240, 147, 251, 0.5)';"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(240, 147, 251, 0.3)';"
+                >
+                    🖨️ طباعة / PDF
+                </button>
+            </div>
+            """, height=55)
+            st.caption("💡 اختر 'حفظ كـ PDF' لتصدير PDF")
 
 else:
     # ====================================================================
