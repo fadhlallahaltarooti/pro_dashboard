@@ -24,8 +24,8 @@ from pathlib import Path
 st.set_page_config(
     page_title="المنصة الذكية لتحليل البيانات",
     page_icon="🌐",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    layout="centered",
+    initial_sidebar_state="collapsed"
 )
 
 # ============================================================================
@@ -352,6 +352,93 @@ st.markdown("""
         background: rgba(102, 126, 234, 0.08);
         border-radius: 10px;
         color: #e8e8e8 !important;
+    }
+    
+    /* ===== استجابة الموبايل ===== */
+    @media (max-width: 768px) {
+        /* العنوان الرئيسي على الموبايل */
+        h1 {
+            font-size: 1.8rem !important;
+            line-height: 1.3 !important;
+            text-align: center !important;
+        }
+        
+        /* عنوان شاشة الترحيب */
+        .welcome-title {
+            font-size: 1.5rem !important;
+        }
+        
+        .welcome-hero {
+            padding: 30px 10px !important;
+        }
+        
+        .welcome-hero p {
+            font-size: 1rem !important;
+        }
+        
+        /* بطاقات الميزات تكون عمودية على الموبايل */
+        .feature-card {
+            min-height: 180px !important;
+            margin-bottom: 15px;
+            padding: 20px 15px !important;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem !important;
+        }
+        
+        .feature-card h4 {
+            font-size: 1.1rem !important;
+        }
+        
+        /* العداد العائم أصغر على الموبايل */
+        .visitor-badge {
+            font-size: 0.75rem !important;
+            padding: 6px 12px !important;
+            bottom: 10px !important;
+            left: 10px !important;
+        }
+        
+        /* بطاقات الرؤى */
+        .insight-card {
+            font-size: 0.9rem !important;
+            padding: 14px !important;
+        }
+        
+        /* المقاييس */
+        [data-testid="stMetric"] {
+            padding: 12px !important;
+        }
+        
+        [data-testid="stMetricValue"] {
+            font-size: 1.2rem !important;
+        }
+        
+        /* صندوق رفع الملف */
+        [data-testid="stFileUploader"] {
+            padding: 5px !important;
+        }
+        
+        /* أزرار التحميل */
+        .stDownloadButton > button {
+            font-size: 0.85rem !important;
+            padding: 0.4rem 0.8rem !important;
+        }
+    }
+    
+    /* الشاشات الصغيرة جداً */
+    @media (max-width: 480px) {
+        h1 {
+            font-size: 1.5rem !important;
+        }
+        
+        .welcome-title {
+            font-size: 1.3rem !important;
+        }
+        
+        .feature-card {
+            min-height: 160px !important;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
