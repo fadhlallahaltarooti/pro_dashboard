@@ -440,42 +440,39 @@ st.markdown("""
             min-height: 160px !important;
         }
     }
+    
+    /* ===== إخفاء الشريط الجانبي المطوي ===== */
+    /* عند طي الـ sidebar، أخفِ كل محتواه */
+    [data-testid="stSidebar"][aria-expanded="false"] {
+        width: 0 !important;
+        min-width: 0 !important;
+        margin-left: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+    
+    [data-testid="stSidebar"][aria-expanded="false"] * {
+        display: none !important;
+    }
+    
+    /* خل المحتوى الرئيسي ياخذ كامل العرض */
+    [data-testid="stSidebar"][aria-expanded="false"] ~ section .main {
+        margin-left: 0 !important;
+        max-width: 100% !important;
+    }
+    
+    /* أي عنصر بمحتوى الـ sidebar في المنتصف يختفي */
+    .stApp > div[data-testid="stSidebar"][aria-expanded="false"] + section > div {
+        max-width: 100% !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
 # ============================================================================
-# الشريط الجانبي
+# عدّاد الزوار (يتم تسجيله تلقائياً)
 # ============================================================================
 
-with st.sidebar:
-    st.markdown("### 📊 إحصائيات الموقع")
-    total, today = increment_visitor()
-    col_v1, col_v2 = st.columns(2)
-    with col_v1:
-        st.metric("الزوار الكلي", f"{total:,}")
-    with col_v2:
-        st.metric("اليوم", f"{today:,}")
-    
-    st.divider()
-    st.markdown("### ℹ️ عن المنصة")
-    st.caption("""
-منصة مجانية بالكامل لتحليل البيانات:
-
-📁 **الصيغ**: CSV, Excel, JSON, Parquet, TSV
-
-📊 **التحليلات**: 
-- إحصاءات وصفية
-- رؤى تلقائية
-- كشف القيم الشاذة
-- تحليل الارتباطات
-- فلترة متقدمة
-
-📈 **الرسوم**: 7 أنواع تفاعلية
-
-📤 **التصدير**: Excel, CSV, JSON
-    """)
-    st.divider()
-    st.caption("⭐ التطبيق مجاني 100%")
+total, today = increment_visitor()
 
 # ============================================================================
 # العنوان
@@ -1031,3 +1028,36 @@ st.markdown(f"""
     👥 {total_v:,} زائر  •  📅 اليوم: {today_v:,}
 </div>
 """, unsafe_allow_html=True)
+
+# ============================================================================
+# Footer - معلومات المنصة (بدل الشريط الجانبي)
+# ============================================================================
+
+st.markdown("<br><br>", unsafe_allow_html=True)
+st.divider()
+
+footer_col1, footer_col2, footer_col3 = st.columns(3)
+
+with footer_col1:
+    st.markdown("""
+    <div style='text-align: center; padding: 15px;'>
+        <h4 style='color: #667eea;'>📁 الصيغ المدعومة</h4>
+        <p style='color: #a0aec0; font-size: 0.9rem;'>CSV • Excel • JSON • TSV</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with footer_col2:
+    st.markdown("""
+    <div style='text-align: center; padding: 15px;'>
+        <h4 style='color: #667eea;'>📊 التحليلات</h4>
+        <p style='color: #a0aec0; font-size: 0.9rem;'>إحصاءات • رؤى تلقائية • فلترة متقدمة</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with footer_col3:
+    st.markdown("""
+    <div style='text-align: center; padding: 15px;'>
+        <h4 style='color: #667eea;'>⭐ مجاني 100%</h4>
+        <p style='color: #a0aec0; font-size: 0.9rem;'>بدون حسابات • بدون قيود</p>
+    </div>
+    """, unsafe_allow_html=True)
