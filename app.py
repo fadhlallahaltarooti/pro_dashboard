@@ -490,16 +490,14 @@ st.markdown("""
         h1, h2, h3 {
             color: #2d3748 !important;
             -webkit-text-fill-color: #2d3748 !important;
-            page-break-after: avoid;
         }
         
         /* بطاقات بحدود بدل خلفية ملونة */
-        .insight-card, [data-testid="stMetric"], .feature-card {
+        .insight-card, [data-testid="stMetric"] {
             background: white !important;
             border: 1px solid #cbd5e0 !important;
             color: black !important;
             box-shadow: none !important;
-            page-break-inside: avoid;
         }
         
         .insight-card *, [data-testid="stMetric"] * {
@@ -507,7 +505,7 @@ st.markdown("""
             -webkit-text-fill-color: black !important;
         }
         
-        /* قيمة المقياس باللون البنفسجي */
+        /* قيمة المقياس */
         [data-testid="stMetricValue"] {
             color: #667eea !important;
             -webkit-text-fill-color: #667eea !important;
@@ -536,7 +534,6 @@ st.markdown("""
         .stDataFrame, table {
             background: white !important;
             border: 1px solid #ddd !important;
-            page-break-inside: avoid;
         }
         
         .stDataFrame th, .stDataFrame td, table th, table td {
@@ -545,9 +542,8 @@ st.markdown("""
             border: 1px solid #ddd !important;
         }
         
-        /* الرسوم البيانية - حافظ عليها */
+        /* الرسوم البيانية */
         .js-plotly-plot {
-            page-break-inside: avoid;
             background: white !important;
         }
         
@@ -555,11 +551,18 @@ st.markdown("""
         hr {
             background: #cbd5e0 !important;
             border-color: #cbd5e0 !important;
+            margin: 10px 0 !important;
         }
         
-        /* تحسين تباعد الصفحات */
-        .stDivider {
-            page-break-before: always;
+        /* إزالة المسافات الزائدة */
+        .stApp > .main > .block-container {
+            padding: 10px !important;
+            max-width: 100% !important;
+        }
+        
+        /* تصغير المسافات بين العناصر */
+        .element-container {
+            margin-bottom: 10px !important;
         }
     }
 </style>
