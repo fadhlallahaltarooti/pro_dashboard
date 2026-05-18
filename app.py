@@ -240,19 +240,21 @@ st.markdown("""
     
     /* ===== عدّاد الزوار ===== */
     .visitor-badge {
-        position: fixed;
-        bottom: 20px;
-        left: 20px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
-        z-index: 999;
-        font-family: 'Tajawal', sans-serif;
+        position: fixed !important;
+        bottom: 20px !important;
+        left: 20px !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        color: white !important;
+        padding: 10px 18px !important;
+        border-radius: 20px !important;
+        font-size: 0.85rem !important;
+        font-weight: 600 !important;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5) !important;
+        z-index: 9999 !important;
+        font-family: 'Tajawal', sans-serif !important;
         animation: float 4s ease-in-out infinite;
+        display: block !important;
+        visibility: visible !important;
     }
     
     /* ===== الشريط الجانبي ===== */
@@ -1035,6 +1037,25 @@ st.markdown(f"""
 
 st.markdown("<br><br>", unsafe_allow_html=True)
 st.divider()
+
+# عدّاد الزوار في الفوتر
+st.markdown(f"""
+<div style='text-align: center; padding: 20px; 
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.05));
+            border-radius: 16px; margin-bottom: 20px;'>
+    <h3 style='color: #667eea; margin-bottom: 15px;'>📊 إحصائيات المنصة</h3>
+    <div style='display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;'>
+        <div>
+            <p style='color: #a0aec0; margin: 0; font-size: 0.9rem;'>إجمالي الزوار</p>
+            <h2 style='color: #667eea; margin: 5px 0;'>👥 {total_v:,}</h2>
+        </div>
+        <div>
+            <p style='color: #a0aec0; margin: 0; font-size: 0.9rem;'>زوار اليوم</p>
+            <h2 style='color: #f093fb; margin: 5px 0;'>📅 {today_v:,}</h2>
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 footer_col1, footer_col2, footer_col3 = st.columns(3)
 
